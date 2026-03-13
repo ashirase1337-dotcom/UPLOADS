@@ -5,17 +5,10 @@ WORKDIR /build
 
 RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 
-# Copy workspace Cargo.toml first
+# Copy only what relay needs
 COPY Cargo.toml ./
-
-# Copy each crate explicitly
-COPY common/   ./common/
-COPY relay/    ./relay/
-COPY agent/    ./agent/
-COPY operator/ ./operator/
-
-# Verify structure before build
-RUN ls -la && cat Cargo.toml
+COPY common/    ./common/
+COPY relay/     ./relay/
 
 # Build only relay
 RUN cargo build --release -p relay
